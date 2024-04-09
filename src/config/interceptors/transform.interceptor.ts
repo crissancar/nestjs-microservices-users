@@ -1,12 +1,11 @@
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class TransformInterceptor implements NestInterceptor {
 	intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
 		return next.handle().pipe(
-			filter((data) => !!data),
 			map((data) => {
 				const response = context.switchToHttp().getRequest();
 				// if (response.query.export) {}

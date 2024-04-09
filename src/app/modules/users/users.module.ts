@@ -1,17 +1,18 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { UserGetController } from './controllers/user-get.controller';
-import { UserPostController } from './controllers/user-post.controller';
-import { UserPutController } from './controllers/user-put.controller';
-import { TypeOrmUserRepository } from './persistence/typeorm-user.repository';
-import { UserEntity } from './persistence/user.entity';
-import { UserEntitySubscriber } from './persistence/user-entity.subscriber';
-import { UserCreator } from './services/user-creator.service';
-import { UserFinderById } from './services/user-finder-by-id.service';
-import { UserRawFinderByOptions } from './services/user-raw-finder-by-options.service';
-import { UserUpdater } from './services/user-updater.service';
-import { UsersFinderByCriteria } from './services/users-finder-by-criteria.service';
+import { CreateUserCommandHandler } from './application/handlers/create-user.handler';
+import { UserCreator } from './application/services/user-creator.service';
+import { UserFinderById } from './application/services/user-finder-by-id.service';
+import { UserRawFinderByOptions } from './application/services/user-raw-finder-by-options.service';
+import { UserUpdater } from './application/services/user-updater.service';
+import { UsersFinderByCriteria } from './application/services/users-finder-by-criteria.service';
+import { UserGetController } from './intrastructure/controllers/user-get.controller';
+import { UserPostController } from './intrastructure/controllers/user-post.controller';
+import { UserPutController } from './intrastructure/controllers/user-put.controller';
+import { TypeOrmUserRepository } from './intrastructure/persistence/typeorm-user.repository';
+import { UserEntity } from './intrastructure/persistence/user.entity';
+import { UserEntitySubscriber } from './intrastructure/persistence/user-entity.subscriber';
 import { usersConfig } from './users.config';
 
 const { repositoryInterface } = usersConfig.repository;
@@ -26,6 +27,7 @@ const { repositoryInterface } = usersConfig.repository;
 		UserFinderById,
 		UserRawFinderByOptions,
 		UserUpdater,
+		CreateUserCommandHandler,
 		{ provide: repositoryInterface, useClass: TypeOrmUserRepository },
 	],
 })

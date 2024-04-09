@@ -1,5 +1,7 @@
 import { BinaryLike, CipherCCMTypes, CipherKey, Encoding } from 'crypto';
 
+import { UserAudiences } from '../../../shared/app/modules/users/enums/user-audiences.enum';
+
 export const environmentVariablesConfig = {
 	axios: {
 		externalApi: {
@@ -56,5 +58,12 @@ export const environmentVariablesConfig = {
 	},
 	typeorm: {
 		logging: null as boolean,
+		seeds: {
+			name: null as string,
+			email: null as string,
+			password: null as string,
+			userAudiences: null as Array<UserAudiences>,
+			adminUserAudience: null,
+		},
 	},
 };
