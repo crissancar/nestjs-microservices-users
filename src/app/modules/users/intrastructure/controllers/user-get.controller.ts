@@ -1,4 +1,5 @@
 import { Controller } from '@nestjs/common';
+import { QueryBus } from '@nestjs/cqrs';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 
 import { LoggerFactory } from '../../../../../shared/app/modules/shared/services/logger-factory.service';
@@ -6,11 +7,11 @@ import { UserDomainEvents } from '../../../../../shared/app/modules/users/enums/
 import { FindRawUserByOptionsPayload } from '../../../../../shared/app/modules/users/interfaces/find-raw-user-by-options-payload.interface';
 import { FindUserByIdPayload } from '../../../../../shared/app/modules/users/interfaces/find-user-by-id-payload.interface';
 import { FindUsersByCriteriaPayload } from '../../../../../shared/app/modules/users/interfaces/find-users-by-criteria-payload.interface';
+import { FindRawUserByOptionsCommand } from '../../application/commands/find-raw-user-by-options.command';
+import { FindUserByIdCommand } from '../../application/commands/find-user-by-id.command';
+import { FindUsersByCriteriaCommand } from '../../application/commands/find-users-by-criteria.command';
 import { FindUserByIdResponse } from '../../application/dtos/find-user-by-id-response.dto';
 import { FindUsersByCriteriaResponse } from '../../application/dtos/find-users-by-criteria-response.dto';
-import { UserFinderById } from '../../application/services/user-finder-by-id.service';
-import { UserRawFinderByOptions } from '../../application/services/user-raw-finder-by-options.service';
-import { UsersFinderByCriteria } from '../../application/services/users-finder-by-criteria.service';
 import { usersConfig } from '../../users.config';
 
 const { getController } = usersConfig;
@@ -21,19 +22,16 @@ const logger = LoggerFactory.create(context);
 
 @Controller()
 export class UserGetController {
-	constructor(
-		private readonly finderById: UserFinderById,
-		private readonly finderByCriteria: UsersFinderByCriteria,
-		private readonly rawFinderByOptions: UserRawFinderByOptions,
-	) {}
+	constructor(private readonly queryBus: QueryBus) {}
 
 	@MessagePattern(UserDomainEvents.FIND_BY_ID)
 	async findById(@Payload() payload: FindUserByIdPayload): Promise<FindUserByIdResponse> {
 		logger.log(find.requestLog);
 
 		const request = payload.data.attributes;
+		const command = new FindUserByIdCommand(request);
 
-		return await this.finderById.run(request);
+		return await this.queryBus.execute(command);
 	}
 
 	@MessagePattern(UserDomainEvents.FIND_RAW_BY_OPTIONS)
@@ -43,8 +41,9 @@ export class UserGetController {
 		logger.log(find.requestLog);
 
 		const request = payload.data.attributes;
+		const command = new FindRawUserByOptionsCommand(request);
 
-		return await this.rawFinderByOptions.run(request);
+		return await this.queryBus.execute(command);
 	}
 
 	@MessagePattern(UserDomainEvents.FIND_BY_CRITERIA)
@@ -54,7 +53,8 @@ export class UserGetController {
 		logger.log(findByCriteria.requestLog);
 
 		const request = payload.data.attributes;
+		const command = new FindUsersByCriteriaCommand(request);
 
-		return this.finderByCriteria.run(request);
+		return this.queryBus.execute(command);
 	}
 }
