@@ -1,8 +1,8 @@
-import { ICommand } from '@nestjs/cqrs';
+import { IQuery } from '@nestjs/cqrs';
 
 import { FindUserByIdRequest } from '../dtos/find-user-by-id-request.dto';
 
-export class FindUserByIdCommand implements ICommand {
+export class FindUserByIdQuery implements IQuery {
 	readonly request: FindUserByIdRequest;
 
 	constructor(request: FindUserByIdRequest) {

@@ -1,17 +1,15 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 
-import { FindUserByIdCommand } from '../commands/find-user-by-id.command';
-import { FindUsersByCriteriaCommand } from '../commands/find-users-by-criteria.command';
 import { FindUsersByCriteriaResponse } from '../dtos/find-users-by-criteria-response.dto';
+import { FindUserByIdQuery } from '../queries/find-user-by-id.query';
+import { FindUsersByCriteriaQuery } from '../queries/find-users-by-criteria.query';
 import { UsersFinderByCriteria } from '../services/users-finder-by-criteria.service';
 
-@CommandHandler(FindUsersByCriteriaCommand)
-export class FindUsersByCriteriaCommandHandler
-	implements ICommandHandler<FindUsersByCriteriaCommand>
-{
+@QueryHandler(FindUsersByCriteriaQuery)
+export class FindUsersByCriteriaQueryHandler implements IQueryHandler<FindUsersByCriteriaQuery> {
 	constructor(private readonly finder: UsersFinderByCriteria) {}
 
-	async execute(command: FindUserByIdCommand): Promise<FindUsersByCriteriaResponse> {
+	async execute(command: FindUserByIdQuery): Promise<FindUsersByCriteriaResponse> {
 		return this.finder.run(command.request);
 	}
 }

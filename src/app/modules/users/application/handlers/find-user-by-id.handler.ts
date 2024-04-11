@@ -1,14 +1,14 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 
-import { FindUserByIdCommand } from '../commands/find-user-by-id.command';
 import { FindUserByIdResponse } from '../dtos/find-user-by-id-response.dto';
+import { FindUserByIdQuery } from '../queries/find-user-by-id.query';
 import { UserFinderById } from '../services/user-finder-by-id.service';
 
-@CommandHandler(FindUserByIdCommand)
-export class FindUserCommandHandler implements ICommandHandler<FindUserByIdCommand> {
+@QueryHandler(FindUserByIdQuery)
+export class FindUserByIdQueryHandler implements IQueryHandler<FindUserByIdQuery> {
 	constructor(private readonly finder: UserFinderById) {}
 
-	async execute(command: FindUserByIdCommand): Promise<FindUserByIdResponse> {
+	async execute(command: FindUserByIdQuery): Promise<FindUserByIdResponse> {
 		return this.finder.run(command.request);
 	}
 }

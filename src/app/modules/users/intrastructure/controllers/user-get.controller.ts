@@ -7,11 +7,11 @@ import { UserDomainEvents } from '../../../../../shared/app/modules/users/enums/
 import { FindRawUserByOptionsPayload } from '../../../../../shared/app/modules/users/interfaces/find-raw-user-by-options-payload.interface';
 import { FindUserByIdPayload } from '../../../../../shared/app/modules/users/interfaces/find-user-by-id-payload.interface';
 import { FindUsersByCriteriaPayload } from '../../../../../shared/app/modules/users/interfaces/find-users-by-criteria-payload.interface';
-import { FindRawUserByOptionsCommand } from '../../application/commands/find-raw-user-by-options.command';
-import { FindUserByIdCommand } from '../../application/commands/find-user-by-id.command';
-import { FindUsersByCriteriaCommand } from '../../application/commands/find-users-by-criteria.command';
 import { FindUserByIdResponse } from '../../application/dtos/find-user-by-id-response.dto';
 import { FindUsersByCriteriaResponse } from '../../application/dtos/find-users-by-criteria-response.dto';
+import { FindRawUserByOptionsQuery } from '../../application/queries/find-raw-user-by-options.query';
+import { FindUserByIdQuery } from '../../application/queries/find-user-by-id.query';
+import { FindUsersByCriteriaQuery } from '../../application/queries/find-users-by-criteria.query';
 import { usersConfig } from '../../users.config';
 
 const { getController } = usersConfig;
@@ -29,7 +29,7 @@ export class UserGetController {
 		logger.log(find.requestLog);
 
 		const request = payload.data.attributes;
-		const command = new FindUserByIdCommand(request);
+		const command = new FindUserByIdQuery(request);
 
 		return await this.queryBus.execute(command);
 	}
@@ -41,7 +41,7 @@ export class UserGetController {
 		logger.log(find.requestLog);
 
 		const request = payload.data.attributes;
-		const command = new FindRawUserByOptionsCommand(request);
+		const command = new FindRawUserByOptionsQuery(request);
 
 		return await this.queryBus.execute(command);
 	}
@@ -53,7 +53,7 @@ export class UserGetController {
 		logger.log(findByCriteria.requestLog);
 
 		const request = payload.data.attributes;
-		const command = new FindUsersByCriteriaCommand(request);
+		const command = new FindUsersByCriteriaQuery(request);
 
 		return this.queryBus.execute(command);
 	}

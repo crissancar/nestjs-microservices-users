@@ -2,6 +2,10 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { CreateUserCommandHandler } from './application/handlers/create-user.handler';
+import { FindRawUserByOptionsQueryHandler } from './application/handlers/find-raw-user-by-options.handler';
+import { FindUserByIdQueryHandler } from './application/handlers/find-user-by-id.handler';
+import { FindUsersByCriteriaQueryHandler } from './application/handlers/find-users-by-criteria.handler';
+import { UpdateUserCommandHandler } from './application/handlers/update-user.handler';
 import { UserCreator } from './application/services/user-creator.service';
 import { UserFinderById } from './application/services/user-finder-by-id.service';
 import { UserRawFinderByOptions } from './application/services/user-raw-finder-by-options.service';
@@ -28,6 +32,10 @@ const { repositoryInterface } = usersConfig.repository;
 		UserRawFinderByOptions,
 		UserUpdater,
 		CreateUserCommandHandler,
+		FindRawUserByOptionsQueryHandler,
+		FindUserByIdQueryHandler,
+		FindUsersByCriteriaQueryHandler,
+		UpdateUserCommandHandler,
 		{ provide: repositoryInterface, useClass: TypeOrmUserRepository },
 	],
 })
