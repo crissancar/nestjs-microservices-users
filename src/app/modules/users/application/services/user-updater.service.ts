@@ -8,6 +8,7 @@ import { UserWithEmailAlreadyExistsException } from '../../domain/exceptions/use
 import { UserRepository } from '../../domain/repositories/user.repository';
 import { usersConfig } from '../../users.config';
 import { UpdateUserRequest } from '../dtos/update-user-request.dto';
+import { UpdateUserResponse } from '../dtos/update-user-response.dto';
 
 const { updater, repository } = usersConfig;
 const { repositoryInterface } = repository;
@@ -19,13 +20,15 @@ const logger = LoggerFactory.create(context);
 export class UserUpdater {
 	constructor(@Inject(repositoryInterface) private readonly repository: UserRepository) {}
 
-	async run(request: UpdateUserRequest): Promise<void> {
+	async run(request: UpdateUserRequest): Promise<UpdateUserResponse> {
 		try {
 			const updatedUser = await this.repository.update(request.id, request);
 
 			if (!updatedUser) {
 				throw new UpdateUserFailedException(context);
 			}
+
+			return UpdateUserResponse.create(updatedUser);
 		} catch (error) {
 			if (TypeOrmError.isUnique(error as QueryFailedError)) {
 				throw new UserWithEmailAlreadyExistsException(context, request.email);
