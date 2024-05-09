@@ -31,6 +31,7 @@ export const environmentVariablesConfig = {
 	},
 	logger: {
 		level: null as string,
+		loki: false,
 	},
 	postgres: {
 		database: {
